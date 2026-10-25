@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- ==========================================================================
+     SFML 2.5.1 工程级配置 —— 只对本工程 (russia block) 生效
+     SDK 位置 : <工程目录>\SFML\     离线自带，不依赖 NuGet 还原 / 系统安装
+     支持     : Debug / Release  x  x64 / Win32  四种组合
+     注意     : 本工程 SubSystem 保持原来的 Console，所以链接项里
+                没有 sfml-main。若想要"无控制台窗口"的游戏窗口：
+                  1) 把 .vcxproj 里 4 处 <SubSystem>Console</SubSystem> 改成 Windows
+                  2) 在下面的 AdditionalDependencies 里加上 sfml-main-d.lib / sfml-main.lib
+
+     编码提示 : 若 .cpp 里写了中文注释、但文件没有 UTF-8 BOM，MSVC 会按 GBK(936) 解析，
+                可能把紧跟其后的 #include 整行吞掉，报出莫名其妙的
+                "sf 不是类或命名空间名称"。两种解法任选其一：
+                  a) 把源文件另存为 "UTF-8 带签名(BOM)"
+                  b) 取消下面 <AdditionalOptions> 那行的注释，启用 /utf-8
+     ========================================================================== -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Visual Studio 里 32 位平台的 $(Platform) 叫 Win32，映射到 SFML 的 x86 目录 -->
+  <PropertyGroup Label="SFMLPaths">
+    <SFMLDir>$(MSBuildThisFileDirectory)SFML</SFMLDir>
+    <SFMLPlatform Condition="'$(Platform)' == 'x64'">x64</SFMLPlatform>
+    <SFMLPlatform Condition="'$(Platform)' == 'Win32'">x86</SFMLPlatform>
+    <SFMLPlatform Condition="'$(SFMLPlatform)' == ''">x64</SFMLPlatform>
+  </PropertyGroup>
+
+  <!-- 头文件目录 + 库目录 -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SFMLDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- 想彻底避免"中文注释吞掉下一行"的坑，把下面这行的注释去掉即可（源码将强制按 UTF-8 解析） -->
+      <!-- <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions> -->
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SFMLDir)\lib\$(SFMLPlatform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Debug 用带 -d 后缀的库，Release 用不带后缀的 -->
+  <ItemDefinitionGroup Condition="'$(Configuration)' == 'Debug'">
+    <Link>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)' == 'Release'">
+    <Link>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib;sfml-network.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- 编译完成后，自动把对应平台的 SFML 运行库 DLL 拷到输出目录，避免"缺 dll 打不开" -->
+  <Target Name="SFMLCopyRuntime" AfterTargets="Build">
+    <ItemGroup>
+      <SFMLRuntimeDlls Include="$(SFMLDir)\bin\$(SFMLPlatform)\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SFMLRuntimeDlls)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+</Project>

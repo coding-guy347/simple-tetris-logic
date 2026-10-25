@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\Rect.obj",
+            "outputs": [
+                "x64\\Debug\\Rect.h_F49C251039CF71BF.ifc.dt.module.json",
+                "x64\\Debug\\Rect.h_F49C251039CF71BF.ifc.dt.d.json",
+                "x64\\Debug\\Rect.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Users\\30118\\source\\repos\\russia block\\russia block\\Rect.h",
+                    "source-path": "c:\\users\\30118\\source\\repos\\russia block\\russia block\\rect.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}
