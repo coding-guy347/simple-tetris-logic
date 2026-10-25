@@ -13,9 +13,24 @@
 ## 🛠️ 技术栈 (Tech Stack)
 
 - **语言**: C++20
-- **图形库**: SFML 2.5.1
-- **开发环境**: Visual Studio 
-- **构建配置**: 自带 `SFML.props` 属性表，彻底解耦环境配置，实现开箱即用。
+- **图形库**: SFML 2.5.1（SDK 需本地准备，见下文）
+- **开发环境**: Visual Studio（平台工具集 `v145`）
+- **构建配置**: 自带 `SFML.props` 属性表，一层配置解耦头文件、库目录、链接项和运行库拷贝
+
+## 📁 仓库结构 (Project Structure)
+
+```
+.
+├── Block.cpp / Block.h          方块逻辑（矩阵模板、旋转、碰撞检测）
+├── Game.cpp  / Game.h           主循环、事件处理、消行、7-Bag 随机池
+├── tools.cpp / tools.h          坐标变换与矩形渲染封装
+├── main.cpp                     程序入口
+├── SFML.props                   SFML 工程级属性表
+├── russia block.vcxproj         Visual Studio 工程
+├── russia block.sln             Visual Studio 解决方案
+├── .gitignore
+└── README.md
+```
 
 ## 🧠 核心架构设计 (Architecture & Design)
 
@@ -35,13 +50,26 @@
 
 ## 🚀 如何运行 (How to Run)
 
-本项目已经配置了工程级属性表（`SFML.props`），无需在系统中配置环境变量，实现真正的“开箱即用”。
+> 仓库**不包含** SFML 二进制 SDK（`.dll` / `.lib` 体积大，不适合入库），克隆后需要本地准备一次。
 
 1. 克隆本仓库到本地。
-2. 使用 Visual Studio 打开 `.sln` 解决方案文件。
-3. 确保你的编译平台是 **x64**。
-4. 直接按 `F5` 编译并运行。
-   *(注：工程已配置自动拷贝脚本，编译后会自动将所需 SFML 的 `.dll` 复制到输出目录，无需手动操作。)*
+2. 下载 **SFML 2.5.1 — Visual C++ 17 (2022) 64-bit**：
+   <https://www.sfml-dev.org/download/sfml/2.5.1/>
+3. 解压后，把其中的 `include`、`lib`、`bin` 三个目录放到仓库根目录的 `SFML\` 下，最终层级为：
+
+   ```
+   SFML\
+   ├── include\SFML\...
+   ├── lib\x64\...      lib\x86\...
+   └── bin\x64\...      bin\x86\...
+   ```
+
+4. 用 Visual Studio 打开 `russia block.sln`，平台选 **x64**，按 `F5` 编译运行。
+
+工程级属性表 `SFML.props` 会自动配置头文件目录、库目录与链接项，并在编译完成后把对应的 `.dll` 复制到输出目录，无需手动配置环境变量或拷贝 DLL。
+
+> **常见报错**：如果提示 `找不到 SFML SDK`，说明第 3 步的目录层级不对——`SFML\include\SFML\Graphics.hpp` 必须真实存在。
+> **关于工具集**：工程使用 `v145`（较新的 Visual Studio）。若你的 VS 版本较旧，把 `.vcxproj` 里 4 处 `<PlatformToolset>v145</PlatformToolset>` 改成你本机已安装的版本（如 `v143`）即可。
 
 ## 🎮 操作说明 (Controls)
 
@@ -55,3 +83,4 @@
 在纯手搓过程中，解决了一些非业务层面的工程问题：
 - **旋转漂移问题**：通过计算旋转后有效方块的 `min_x, max_x, width, height`，动态计算 `offsetX` 和 `offsetY`，将非对称方块重新对准 4x4 矩阵的中心。
 - **循环消除死锁**：在 `DeleteCol` 函数中，消行后通过 `row++` 抵消掉外层的 `row--`，实现了在同一帧内高精度排查连续多行消除的场景。
+- **仓库卫生**：曾把 `x64/` 编译中间产物与整个 SFML SDK 一起提交，导致仓库臃肿。现已加入 `.gitignore` 并在最新提交中清理，克隆后仓库仅剩源码与工程配置。

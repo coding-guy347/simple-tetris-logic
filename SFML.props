@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- ==========================================================================
      SFML 2.5.1 工程级配置 —— 只对本工程 (russia block) 生效
      SDK 位置 : <工程目录>\SFML\     离线自带，不依赖 NuGet 还原 / 系统安装
@@ -47,6 +47,12 @@
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib;sfml-network.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+
+  <!-- 缺少 SDK 时给出明确提示，而不是让编译器抛出一堆 "sf 不是类或命名空间" 的谜语 -->
+  <Target Name="SFMLCheckSdk" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(SFMLDir)\include\SFML\Graphics.hpp')"
+           Text="找不到 SFML SDK。请下载 SFML 2.5.1 的 Visual C++ 版本，把 include、lib、bin 三个目录放到 $(SFMLDir)（详见 README.md）" />
+  </Target>
 
   <!-- 编译完成后，自动把对应平台的 SFML 运行库 DLL 拷到输出目录，避免"缺 dll 打不开" -->
   <Target Name="SFMLCopyRuntime" AfterTargets="Build">
