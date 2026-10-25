@@ -24,6 +24,9 @@
     <ProjectGuid>{4ed5cd54-3204-41f4-8eca-424306833d47}</ProjectGuid>
     <RootNamespace>russiablock</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <!-- 固定输出目录，保证无论从 .sln 还是直接打开 .vcxproj，产物都落在 <工程目录>\<平台>\<配置>\ -->
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
