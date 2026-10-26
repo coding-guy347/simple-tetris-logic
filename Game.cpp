@@ -34,7 +34,7 @@ void Game::Run()
 				}
 			}
 		}
-		if (MoveTime>= MoveTimeInterval)
+		if (MoveTime>= MoveTimeInterval)//移动时间间隔
 		{
 			MoveTime -= MoveTimeInterval;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -46,7 +46,7 @@ void Game::Run()
 				block.MoveRight();
 			}
 		}
-		if (DropTime >= DropTimeInterval)
+		if (DropTime >= DropTimeInterval)//下落时间间隔
 		{
 			DropTime -= DropTimeInterval;
 			if(!block.Canmove())
@@ -76,7 +76,7 @@ void Game::ReFillBag()
 			bag.push_back(i);
 		}
 	}
-	shuffle(bag.begin(), bag.end(), engine);
+	shuffle(bag.begin(), bag.end(), engine);//打乱顺序
 }
 
 int Game::NewIndex()
@@ -127,7 +127,7 @@ void Game::DeleteCol()
 			{
 				visited[0][c] = false;
 			}
-			row++;
+			row++;//重新检查当前行，因为上面的行已经下移
 		}
 	}
 }
