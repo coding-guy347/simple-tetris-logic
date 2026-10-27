@@ -15,7 +15,7 @@ public:
 	void Spin();
 	int Get_x() const;
 	int Get_y() const;
-	bool IsHitWall();
+	bool IsHitWall();//判断是否撞墙
 	bool Canmove();
 	void SolidBlock();
 	void SetCurrentShape(int index);

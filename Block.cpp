@@ -3,7 +3,8 @@
 Block::Block()
 { 
     x = 5;
-    y = 0;
+    y = 0;//初始坐标
+    // 初始化七种方块的形状
     shape[0] =
     {{
         {0,0,0,0},
@@ -70,7 +71,7 @@ int Block::Get_y()const
 {
     return y;
 }
-
+//旋转
 void Block::Spin()
 {
     std::array<std::array<bool, 4>, 4> rotated{};
@@ -145,12 +146,12 @@ void Block::Spin()
         CurrentShape = rotated;  // 长条：绝对不居中，直接原样转！
     }
 }
-
+//设置当前方块的形状
 void Block::SetCurrentShape(int index)
 {
     CurrentShape = shape[index];
 }
-
+//左移
 void Block::MoveLeft()
 {
     for (int i = 0;i < 4;i++)
@@ -165,7 +166,7 @@ void Block::MoveLeft()
     }
     x--;
 }
-
+//右移
 void Block::MoveRight()
 {
     for (int i = 0;i < 4;i++)
@@ -180,13 +181,13 @@ void Block::MoveRight()
     }
     x++;
 }
-
+//下坠
 void Block::MoveDown()
 {
     if (!Canmove()) return;
     y++;
 }
-
+//渲染方块
 void Block::Render()
 {
     for (int i = 0;i < 4;i++)
@@ -202,7 +203,7 @@ void Block::Render()
         }
     }
 }
-
+//判断是否可以移动
 bool Block::Canmove()
 {
     bool canMove = true;
@@ -210,6 +211,7 @@ bool Block::Canmove()
         for (int j = 0; j < 4; j++) {
             if (CurrentShape[i][j]) {
                 int nextY = y+ 1 + i;
+                //如果下一个位置超出边界或者已经被占用，则不能移动
                 if (nextY >= Map_Rows || visited[y+1+i][x + j]) {
                     canMove = false;
                     break;
@@ -219,13 +221,13 @@ bool Block::Canmove()
     }
     return canMove;
 }
-
+//重新初始化
 void Block::ReInit()
 {
     x = 5;
     y = 0;
 }
-
+//固化方块
 void Block::SolidBlock()
 {
     for (int i = 0;i < 4;i++)

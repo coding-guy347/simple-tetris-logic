@@ -14,7 +14,7 @@ private:
 		Playing,
 		Ending
 	};
-    vector<int>bag;
+    vector<int>bag;//存放7种方块的索引
 	random_device rd;
 	mt19937 engine;
 	uniform_int_distribution<int>dist{ 0,6 };
@@ -22,8 +22,8 @@ private:
 public:
 	Game() :engine(rd()){}
 	void Run();
-	void ReFillBag();
-	int NewIndex();
+	void ReFillBag();//重新装填bag
+	int NewIndex();//获取新的方块索引
 	void RenderMap();
-	void DeleteCol();
+	void DeleteCol();//消除整行方块
 };

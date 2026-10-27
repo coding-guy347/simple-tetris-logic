@@ -5,7 +5,7 @@ bool visited[15][15];
 
 int ToPixel_x(int x)
 {
-	int newX = x * CellSize+Offset_X;
+	int newX = x * CellSize+Offset_X;//将格子坐标转换为像素坐标
 	return newX;
 }
 
